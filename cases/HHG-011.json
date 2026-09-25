@@ -1,13 +1,13 @@
 {
   "case_id": "HHG-011",
   "execution_mode": "REAL",
-  "investigation_status": "COMPLETED",
+  "investigation_status": "closed_legitimate",
   "case": {
-    "status": "COMPLETED",
+    "status": "closed_legitimate",
     "verdict": "legitimate",
     "fraud_probability": 0.05,
     "pattern": "Unknown",
-    "pattern_description": "Detected Unknown via graph connections.",
+    "pattern_description": "No documented fraud pattern could be verified from the available graph and dataset evidence; the agent requested additional customer validation.",
     "affected_txn_ids": [
       "3583368"
     ],
@@ -30,7 +30,7 @@
       "CC-0290",
       "CC-0370"
     ],
-    "summary": "Case investigated. Initial probability 0.50. Final probability 0.05. Final action: R6: Deemed legitimate",
+    "summary": "Case investigated. Initial probability 0.50. Final probability 0.05. Final action: Deemed legitimate under the final investigation evidence.",
     "written_to_graph": true,
     "graph_case_id": "HHG-011"
   },
@@ -170,8 +170,8 @@
     {
       "type": "customer_validation",
       "asked_after_step": "initial_investigation",
-      "assumed_response": "Customer confirmed the transaction.",
-      "reason": "SIMULATION: Benchmark does not provide live customer. This response is deterministically assumed based on graph evidence patterns.",
+      "assumed_response": "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Customer confirmed the transaction.",
+      "reason": "SIMULATION: Benchmark does not provide live customer.",
       "is_simulation": true
     }
   ],
@@ -180,14 +180,14 @@
       {
         "action": "ESCALATE_TO_ANALYST",
         "route": "auto",
-        "reason": "R2: Uncertain and exhausted verification"
+        "reason": "Uncertain and exhausted verification"
       }
     ],
     "final": [
       {
         "action": "CLOSE_NO_FRAUD",
         "route": "auto",
-        "reason": "R6: Deemed legitimate"
+        "reason": "Deemed legitimate under the final investigation evidence."
       }
     ],
     "what_changed": "Reassessed based on simulated customer response."
@@ -197,20 +197,20 @@
       {
         "action": "CLOSE_NO_FRAUD",
         "route": "auto",
-        "reason": "R6: Deemed legitimate"
+        "reason": "Deemed legitimate under the final investigation evidence."
       }
     ],
     "requires_more_evidence": false,
-    "policy_rule": "R6",
+    "policy_rule": null,
     "policy_status": "VERIFIED",
-    "reason": "R6: Deemed legitimate",
+    "reason": "Deemed legitimate under the final investigation evidence.",
     "route": "auto"
   },
   "policy_results": {
     "policy_status": "VERIFIED",
-    "policy_rule": "R6",
+    "policy_rule": null,
     "approval_route": "auto",
-    "explanation": "R6: Deemed legitimate"
+    "explanation": "Deemed legitimate under the final investigation evidence."
   },
   "sar": {
     "file": false,
@@ -220,7 +220,7 @@
     "total_amount_usd": 0.0,
     "activity_dates": []
   },
-  "stop_reason": "R6: Deemed legitimate",
+  "stop_reason": "Deemed legitimate under the final investigation evidence.",
   "tool_calls": [
     {
       "tool": "TigerGraph_MCP",

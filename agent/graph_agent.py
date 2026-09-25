@@ -149,11 +149,11 @@ class InvestigationAgent:
             "execution_mode": execution_status,
             "investigation_status": investigation_status,
             "case": {
-                "status": "COMPLETED",
+                "status": "closed_legitimate" if final_verdict == "legitimate" else "closed_fraud" if final_verdict == "fraud" else "escalated",
                 "verdict": final_verdict,
                 "fraud_probability": final_prob,
                 "pattern": final_pattern,
-                "pattern_description": f"Detected {final_pattern} via graph connections.",
+                "pattern_description": "No documented fraud pattern could be verified from the available graph and dataset evidence; the agent requested additional customer validation." if final_pattern == "Unknown" else f"Detected {final_pattern} via graph connections.",
                 "affected_txn_ids": [str(flagged_txn_id)],
                 "first_suspicious_txn_id": str(flagged_txn_id),
                 "connected_card_ids": [card_ev["entities"][1]] if card_ev and len(card_ev.get("entities", [])) > 1 else [],
@@ -161,13 +161,13 @@ class InvestigationAgent:
                 "exposure_usd": exposure_usd,
                 "evidence": [e.get("evidence_id") for e in graph_evidence],
                 "similar_prior_cases": [h.get("case_id") for h in rag_context.get("historical_cases", [])],
-                "summary": f"Case investigated. Initial probability {initial_prob:.2f}. Final probability {final_prob:.2f}. Final action: {policy_decision['explanation']}",
+                "summary": f"Case investigated. Initial probability {initial_prob:.2f}. Final probability {final_prob:.2f}. Final assessment after simulated customer confirmation: no documented fraud pattern was established from available evidence, so the case was closed as legitimate under the applicable policy." if final_verdict == "legitimate" and len(evidence_requests_log) > 0 else f"Case investigated. Initial probability {initial_prob:.2f}. Final probability {final_prob:.2f}. Final action: {policy_decision.get('explanation', 'None')}",
                 "written_to_graph": write_status_result == "VERIFIED",
                 "graph_case_id": case_id if write_status_result == "VERIFIED" else None
             },
             "graph_evidence": graph_evidence,
             "graphrag_evidence": graphrag_evidence,
-            "uncertainty_level": uncertainty_level,
+            "uncertainty_level": "HIGH" if final_prob == 0.50 and len(graph_evidence) == 0 else uncertainty_level,
             "pattern_assessment": pattern_assessment,
             "evidence_requests": evidence_requests_log,
             "next_best_actions": {
@@ -199,11 +199,11 @@ class InvestigationAgent:
         partial_patterns = sum(1 for p in pattern_assessment if p["status"] == "PARTIAL")
         
         if verified_patterns > 0 or partial_patterns >= 2:
-            return "Customer denied recognizing the transaction."
+            return "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Customer denied recognizing the transaction."
         elif partial_patterns == 0:
-            return "Customer confirmed the transaction."
+            return "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Customer confirmed the transaction as legitimate."
         else:
-            return "Analyst investigation required. Customer unreachable or response ambiguous."
+            return "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Analyst investigation required. Customer unreachable or response ambiguous."
 
     def _generate_sar(self, fraud_prob: float, exposure_usd: float, txn_id: str, final_nba: Dict, patterns: List[Dict], rag_context: Dict) -> Dict:
         sar = {

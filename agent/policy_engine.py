@@ -15,67 +15,62 @@ def check_policy(recommendation: str, risk: float, exposure_usd: float, evidence
     """
     actions = []
     
-    # R1: Verify before you block on a weak signal
+    # R1: Step-up authentication / Verify with customer
     if ("BLOCK" in recommendation or "DECLINE" in recommendation) and confidence < 0.70:
-        actions.append({"action": "VERIFY_WITH_CUSTOMER", "route": "auto", "reason": "R1: weak signal, verifying before blocking"})
+        actions.append({"action": "VERIFY_WITH_CUSTOMER", "route": "auto", "reason": "R1: Step-up authentication required for weak signal"})
         return {"actions": actions, "policy_reference": "R1"}
 
-    # R2: Escalation if uncertain and exhausted verification (assuming evidence has verification exhausted)
-    # We will simulate "exhausted verification" if VERIFY is recommended again but confidence is very low.
+    # Escalate if uncertain and exhausted verification
     if ("VERIFY" in recommendation or confidence < 0.50) and len(evidence) > 2 and not ("BLOCK" in recommendation or "ALLOW" in recommendation):
-        actions.append({"action": "ESCALATE_TO_ANALYST", "route": "auto", "reason": "R2: Uncertain and exhausted verification"})
-        return {"actions": actions, "policy_reference": "R2"}
+        actions.append({"action": "ESCALATE_TO_ANALYST", "route": "auto", "reason": "Uncertain and exhausted verification"})
+        return {"actions": actions, "policy_reference": None}
 
-    # R7: Disputed but legitimate recurring pattern
+    # R7: Disputes
     if "LEGITIMATE RECURRING" in recommendation.upper() or ("DISPUTE" in recommendation.upper() and "LEGITIMATE" in recommendation.upper()):
         actions.append({"action": "ALLOW_TRANSACTION", "route": "L1", "reason": "R7: Disputed but legitimate recurring pattern"})
         return {"actions": actions, "policy_reference": "R7"}
 
-    # R10: BLOCK_ALL_CARDS restrictions
     if "BLOCK_ALL_CARDS" in recommendation:
-        actions.append({"action": "BLOCK_ALL_CARDS", "route": "L2", "reason": "R10: BLOCK_ALL_CARDS restrictions"})
-        return {"actions": actions, "policy_reference": "R10"}
+        actions.append({"action": "BLOCK_ALL_CARDS", "route": "L2", "reason": "Blocking all cards requires L2 approval"})
+        return {"actions": actions, "policy_reference": None}
 
     if "BLOCK" in recommendation:
-        # R4: Exposure > $2500
+        # Blocking limits > $2500
         if exposure_usd > 2500:
-            actions.append({"action": "BLOCK_CARD", "route": "L2", "reason": "R4: Exposure > $2500 requires L2"})
-            policy = "R4"
-        # R3: Exposure <= $2500
+            actions.append({"action": "BLOCK_CARD", "route": "L2", "reason": "Blocking limit exceeded ($2500), requires L2"})
+            policy = None
+        # Blocking limits <= $2500
         else:
-            actions.append({"action": "BLOCK_CARD", "route": "L1", "reason": "R3: L1 required for blocking card <= $2500"})
-            policy = "R3"
+            actions.append({"action": "BLOCK_CARD", "route": "L1", "reason": "Blocking limit under threshold, requires L1"})
+            policy = None
             
         actions.append({"action": "CREATE_CASE", "route": "auto", "reason": "Required when blocking"})
 
-        # R5: Confirmed fraud and exposure > $1000
+        # SAR filing thresholds
         if exposure_usd > 1000 and confidence >= 0.85:
-            actions.append({"action": "FILE_REPORT", "route": "L2", "reason": "R5: Confirmed fraud and exposure > $1000"})
+            actions.append({"action": "FILE_REPORT", "route": "L2", "reason": "SAR filing threshold met (Confirmed fraud and exposure > $1000)"})
             
         return {"actions": actions, "policy_reference": policy}
 
     if "ALLOW" in recommendation or "LEGITIMATE" in recommendation:
-        # R6: Legitimate Closure
-        actions.append({"action": "CLOSE_NO_FRAUD", "route": "auto", "reason": "R6: Deemed legitimate"})
-        return {"actions": actions, "policy_reference": "R6"}
+        actions.append({"action": "CLOSE_NO_FRAUD", "route": "auto", "reason": "Deemed legitimate based on available evidence and simulated response."})
+        return {"actions": actions, "policy_reference": None}
 
     if "VERIFY" in recommendation:
-        actions.append({"action": "VERIFY_WITH_CUSTOMER", "route": "auto", "reason": "Verifying transaction with customer"})
+        actions.append({"action": "VERIFY_WITH_CUSTOMER", "route": "auto", "reason": "R1: Step-up authentication required"})
         return {"actions": actions, "policy_reference": "R1"}
         
-    # R9: Undocumented patterns
     if "UNDOCUMENTED" in recommendation.upper() or confidence < 0.30:
-        actions.append({"action": "ESCALATE_TO_ANALYST", "route": "L2", "reason": "R9: Undocumented patterns"})
-        return {"actions": actions, "policy_reference": "R9"}
+        actions.append({"action": "ESCALATE_TO_ANALYST", "route": "L2", "reason": "Undocumented pattern, escalation required"})
+        return {"actions": actions, "policy_reference": None}
 
-    # R8: Escalate when uncertain and exposed
     if confidence < 0.60 and exposure_usd > 1000:
-        actions.append({"action": "ESCALATE_TO_ANALYST", "route": "L2", "reason": "R8: Escalate when uncertain and exposed"})
-        return {"actions": actions, "policy_reference": "R8"}
+        actions.append({"action": "ESCALATE_TO_ANALYST", "route": "L2", "reason": "Escalation due to high exposure and uncertainty"})
+        return {"actions": actions, "policy_reference": None}
 
     # Default fallback
     actions.append({"action": "ESCALATE_TO_ANALYST", "route": "auto", "reason": "Uncertain, escalated"})
-    return {"actions": actions, "policy_reference": "R2"}
+    return {"actions": actions, "policy_reference": None}
 
 def determine_approval_route(actions: List[Dict]) -> str:
     routes = [a["route"] for a in actions]
