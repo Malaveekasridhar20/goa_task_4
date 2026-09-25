@@ -1,0 +1,25 @@
+// GSQL Query: fraud_risk_propagation
+// Propagates risk score through shared devices and emails.
+
+CREATE QUERY fraud_risk_propagation(FLOAT max_change = 0.001, INT max_iter = 10) FOR GRAPH FraudGraph SYNTAX V2 {
+  SumAccum<FLOAT> @risk_score;
+  SumAccum<FLOAT> @received_risk;
+  OrAccum @visited = false;
+  
+  Start = {Transaction.*};
+  
+  // Initialize with intrinsic risk
+  Txns = SELECT t FROM Start:t ACCUM t.@risk_score = t.risk_score;
+  
+  // Propagate to devices and emails
+  WHILE Txns.size() > 0 LIMIT max_iter DO
+    DevicesAndEmails = SELECT tgt FROM Txns:s -((FROM_DEVICE|PURCHASER_EMAIL|RECIPIENT_EMAIL)>)-> :tgt
+                       ACCUM tgt.@received_risk += s.@risk_score * 0.5;
+                       
+    Txns = SELECT tgt FROM DevicesAndEmails:s -(_>)-> Transaction:tgt
+           WHERE tgt.@visited == false
+           ACCUM tgt.@risk_score += s.@received_risk * 0.5, tgt.@visited = true;
+  END;
+  
+  PRINT Start[Start.txn_id, Start.@risk_score];
+}

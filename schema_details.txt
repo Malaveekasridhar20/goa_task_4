@@ -1,0 +1,32 @@
+```json
+{
+  "success": false,
+  "operation": "show_graph_details",
+  "summary": "Failed to show graph details: 500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/gsql/v1/statements'",
+  "metadata": {
+    "graph_name": "Transaction_Fraud"
+  },
+  "suggestions": [
+    "Check the error message for specific details",
+    "Call 'show_graph_details' to understand the current graph structure",
+    "Verify all required parameters are provided correctly"
+  ],
+  "error": "500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/gsql/v1/statements'",
+  "error_code": "OPERATION_ERROR",
+  "timestamp": "2026-09-20T17:24:38.134989Z"
+}
+```
+
+**Failed to show graph details: 500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/gsql/v1/statements'**
+
+**Suggestions:**
+1. Check the error message for specific details
+2. Call 'show_graph_details' to understand the current graph structure
+3. Verify all required parameters are provided correctly
+
+**Error Details:**
+500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/gsql/v1/statements'
+
+**Error Code:** OPERATION_ERROR
+
+**Metadata:** {"graph_name": "Transaction_Fraud"}

@@ -1,0 +1,245 @@
+{
+  "case_id": "HHG-015",
+  "execution_mode": "REAL",
+  "investigation_status": "COMPLETED",
+  "case": {
+    "status": "COMPLETED",
+    "verdict": "fraud",
+    "fraud_probability": 0.9,
+    "pattern": "CNP",
+    "pattern_description": "Detected CNP via graph connections.",
+    "affected_txn_ids": [
+      "3464869"
+    ],
+    "first_suspicious_txn_id": "3464869",
+    "connected_card_ids": [
+      "15158"
+    ],
+    "connected_device_profiles": [
+      "desktop_Trident/7.0"
+    ],
+    "exposure_usd": 0.0,
+    "evidence": [
+      "EV-0FAFF899",
+      "EV-971D2B55",
+      "EV-11E9F168",
+      "EV-A98B603E"
+    ],
+    "similar_prior_cases": [
+      "CC-0137",
+      "CC-0290",
+      "CC-0370"
+    ],
+    "summary": "Case investigated. Initial probability 0.90. Final probability 0.90. Final action: R3: L1 required for blocking card <= $2500",
+    "written_to_graph": true,
+    "graph_case_id": "HHG-015"
+  },
+  "graph_evidence": [
+    {
+      "evidence_id": "EV-0FAFF899",
+      "source": "TigerGraph_MCP",
+      "query": "get_transaction_context",
+      "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
+      "entities": [
+        3464869,
+        "15158"
+      ],
+      "attributes": {
+        "txn_amount": null,
+        "card_pagerank": null
+      },
+      "finding": "Transaction 3464869 was made by Card 15158, which has 0 total transactions. Sampled related: []",
+      "evidence_strength": "INDIRECT"
+    },
+    {
+      "evidence_id": "EV-971D2B55",
+      "source": "TigerGraph_MCP",
+      "query": "get_merchant_context",
+      "traversal": "Payment_Transaction -> Merchant -> Merchant_Category",
+      "entities": [
+        3464869,
+        "327.0_87.0"
+      ],
+      "attributes": {},
+      "finding": "Transaction at Merchant 327.0_87.0, Categories: []",
+      "evidence_strength": "DIRECT"
+    },
+    {
+      "evidence_id": "EV-11E9F168",
+      "source": "TigerGraph_MCP",
+      "query": "get_party_device_ip_context",
+      "traversal": "Transaction -> Card -> Party -> Device/IP",
+      "entities": [
+        3464869,
+        "15158",
+        "15158",
+        "desktop_Trident/7.0"
+      ],
+      "attributes": {},
+      "finding": "Party 15158 has Devices: ['desktop_Trident/7.0'], IPs: []",
+      "evidence_strength": "DIRECT"
+    },
+    {
+      "evidence_id": "EV-A98B603E",
+      "source": "TigerGraph_GraphAlgorithm",
+      "query": "Card Transaction Velocity (Local Neighborhood Sub-graph Aggregation)",
+      "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
+      "entities": [
+        "3464869"
+      ],
+      "attributes": {},
+      "finding": "Graph algorithm execution failed or data is unavailable.",
+      "evidence_strength": "UNAVAILABLE"
+    }
+  ],
+  "graphrag_evidence": [
+    {
+      "source": "policy",
+      "value": "VERIFIED (Loaded from official policy document)"
+    },
+    {
+      "source": "fraud_patterns",
+      "value": [
+        "Card testing",
+        "CNP",
+        "CNP from new device",
+        "Out-of-region",
+        "Account takeover"
+      ]
+    },
+    {
+      "source": "regulatory",
+      "value": "Extracted from policy (e.g. SAR > $1000 thresholds)"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-0137"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-0290"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-0370"
+    }
+  ],
+  "uncertainty_level": "LOW",
+  "pattern_assessment": [
+    {
+      "pattern": "Card testing",
+      "status": "UNAVAILABLE",
+      "evidence": [],
+      "reason": "No card or related transaction evidence available."
+    },
+    {
+      "pattern": "CNP",
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-971D2B55"
+      ],
+      "reason": "Merchant context available, missing specific CNP indicator."
+    },
+    {
+      "pattern": "CNP from new device",
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-11E9F168"
+      ],
+      "reason": "Device context established, potentially unrecognized."
+    },
+    {
+      "pattern": "Out-of-region",
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-11E9F168"
+      ],
+      "reason": "Party established but transaction-specific location evidence is unavailable."
+    },
+    {
+      "pattern": "Account takeover",
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-11E9F168"
+      ],
+      "reason": "Party has device/IP context, possible ATO if devices are shared/changed."
+    }
+  ],
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R3: L1 required for blocking card <= $2500"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Required when blocking"
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R3: L1 required for blocking card <= $2500"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Required when blocking"
+      }
+    ],
+    "what_changed": "No change."
+  },
+  "final_nba": {
+    "actions": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R3: L1 required for blocking card <= $2500"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Required when blocking"
+      }
+    ],
+    "requires_more_evidence": false,
+    "policy_rule": "R3",
+    "policy_status": "VERIFIED",
+    "reason": "R3: L1 required for blocking card <= $2500",
+    "route": "L1"
+  },
+  "policy_results": {
+    "policy_status": "VERIFIED",
+    "policy_rule": "R3",
+    "approval_route": "L1",
+    "explanation": "R3: L1 required for blocking card <= $2500"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Fraud involving shared device or account takeover. Fraud matches prior closed cases.",
+    "narrative": "Agent identified fraudulent transaction 3464869 exposing $0.0. Fraud involving shared device or account takeover. Fraud matches prior closed cases.",
+    "subjects": [
+      "3464869"
+    ],
+    "total_amount_usd": 0.0,
+    "activity_dates": [
+      "2023-12-01"
+    ]
+  },
+  "stop_reason": "R3: L1 required for blocking card <= $2500",
+  "tool_calls": [
+    {
+      "tool": "TigerGraph_MCP",
+      "count": 30
+    }
+  ],
+  "tokens": {
+    "prompt": 0,
+    "completion": 0
+  },
+  "latency_s": 43.05593490600586
+}

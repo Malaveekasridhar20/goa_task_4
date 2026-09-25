@@ -1,0 +1,32 @@
+﻿```json
+{
+  "success": false,
+  "operation": "get_graph_schema",
+  "summary": "Failed to get graph schema: 500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/restpp/version'",
+  "metadata": {
+    "graph_name": "Transaction_Fraud"
+  },
+  "suggestions": [
+    "Check the error message for specific details",
+    "Call 'show_graph_details' to understand the current graph structure",
+    "Verify all required parameters are provided correctly"
+  ],
+  "error": "500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/restpp/version'",
+  "error_code": "OPERATION_ERROR",
+  "timestamp": "2026-09-20T17:30:48.401506Z"
+}
+```
+
+**Failed to get graph schema: 500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/restpp/version'**
+
+**Suggestions:**
+1. Check the error message for specific details
+2. Call 'show_graph_details' to understand the current graph structure
+3. Verify all required parameters are provided correctly
+
+**Error Details:**
+500, message='Internal Server Error', url='https://tg-645f817e-787c-4ceb-aa04-a13eb198ba68.tg-2635877100.i.tgcloud.io/restpp/version'
+
+**Error Code:** OPERATION_ERROR
+
+**Metadata:** {"graph_name": "Transaction_Fraud"}

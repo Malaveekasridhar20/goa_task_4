@@ -1,0 +1,189 @@
+{
+  "case_id": "HHG-001",
+  "flagged_txn_id": 5298,
+  "execution_mode": "REAL_GRAPH_DEMO",
+  "investigation_status": "COMPLETED",
+  "is_official_benchmark": false,
+  "graph_evidence": [
+    {
+      "evidence_id": "EV-F471817B",
+      "source": "TigerGraph_MCP",
+      "query": "get_transaction_context",
+      "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
+      "entities": [
+        5298,
+        "4602925468627288",
+        "5386",
+        "5136",
+        "5263",
+        "5163",
+        "5400",
+        "5259",
+        "5378",
+        "5157",
+        "5292",
+        "5165"
+      ],
+      "attributes": {
+        "txn_amount": 40.89,
+        "card_pagerank": 1.433891
+      },
+      "finding": "Transaction 5298 was made by Card 4602925468627288, which has 100 total transactions. Sampled related: ['5386', '5136', '5263', '5163', '5400', '5259', '5378', '5157', '5292', '5165']",
+      "evidence_strength": "DIRECT"
+    },
+    {
+      "evidence_id": "EV-BE48854D",
+      "source": "TigerGraph_MCP",
+      "query": "get_merchant_context",
+      "traversal": "Payment_Transaction -> Merchant -> Merchant_Category",
+      "entities": [
+        5298,
+        "fraud_Erdman-Kertzmann",
+        "gas_transport"
+      ],
+      "attributes": {},
+      "finding": "Transaction at Merchant fraud_Erdman-Kertzmann, Categories: ['gas_transport']",
+      "evidence_strength": "DIRECT"
+    },
+    {
+      "evidence_id": "EV-2F3C1E3A",
+      "source": "TigerGraph_MCP",
+      "query": "get_party_device_ip_context",
+      "traversal": "Card -> Party",
+      "entities": [
+        "4602925468627288"
+      ],
+      "attributes": {},
+      "finding": "No Party linked to Card",
+      "evidence_strength": "INDIRECT"
+    },
+    {
+      "evidence_id": "EV-A8259104",
+      "source": "TigerGraph_GraphAlgorithm",
+      "query": "Card Transaction Velocity (Local Neighborhood Sub-graph Aggregation)",
+      "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
+      "entities": [
+        "5298"
+      ],
+      "attributes": {
+        "velocity_count": 1814,
+        "velocity_amount": 81286.73000000004,
+        "max_amount": 1310.28
+      },
+      "finding": "The graph algorithm executed a neighborhood velocity analysis and identified 1814 connected transactions with a total aggregated value of $81,286.73.",
+      "evidence_strength": "DIRECT"
+    }
+  ],
+  "graphrag_evidence": [
+    {
+      "source": "policy",
+      "value": "VERIFIED (Loaded from official policy document)"
+    },
+    {
+      "source": "fraud_patterns",
+      "value": [
+        "Card testing",
+        "CNP",
+        "CNP from new device",
+        "Out-of-region",
+        "Account takeover"
+      ]
+    },
+    {
+      "source": "regulatory",
+      "value": "Extracted from policy (e.g. SAR > $1000 thresholds)"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-0137"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-0290"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-0370"
+    }
+  ],
+  "uncertainty": {
+    "level": "HIGH",
+    "reason": "Transaction 5298 was made by Card 4602925468627288, which has 100 total transactions. Sampled related: ['5386', '5136', '5263', '5163', '5400', '5259', '5378', '5157', '5292', '5165'] Transaction at Merchant fraud_Erdman-Kertzmann, Categories: ['gas_transport'] No Party linked to Card The graph algorithm executed a neighborhood velocity analysis and identified 1814 connected transactions with a total aggregated value of $81,286.73. These signals are insufficient to establish whether the customer authorized the transaction without verified policy or customer confirmation."
+  },
+  "pattern_assessment": [
+    {
+      "pattern": "Card testing",
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-F471817B"
+      ],
+      "reason": "High velocity / related transactions observed, but requires external payment gateway logs to verify actual authorization declines."
+    },
+    {
+      "pattern": "CNP",
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-BE48854D"
+      ],
+      "reason": "Merchant/category context is available, but transaction-level card-entry-mode or POS authentication evidence is not available in the connected schema."
+    },
+    {
+      "pattern": "CNP from new device",
+      "status": "UNAVAILABLE",
+      "evidence": [],
+      "reason": "The schema lacks a direct Payment_Transaction to Device relationship. Cannot automatically prove transaction origin device."
+    },
+    {
+      "pattern": "Out-of-region",
+      "status": "UNAVAILABLE",
+      "evidence": [],
+      "reason": "No party location context available."
+    },
+    {
+      "pattern": "Account takeover",
+      "status": "UNAVAILABLE",
+      "evidence": [],
+      "reason": "Missing transaction-level signals: Cannot link specific transactions to IP/Device changes without external authentication logs."
+    }
+  ],
+  "evidence_request": {
+    "type": "customer_validation",
+    "reason": "Need to verify if customer made the transaction due to high uncertainty."
+  },
+  "additional_evidence": [],
+  "initial_nba": {
+    "actions": [
+      {
+        "action": "VERIFY_WITH_CUSTOMER"
+      }
+    ],
+    "requires_more_evidence": true,
+    "policy_rule": "R1",
+    "policy_status": "VERIFIED",
+    "reason": "Available graph evidence provides contextual signals but is insufficient to establish safety or confirm fraud without verified policy rules.",
+    "route": "auto"
+  },
+  "final_nba": {
+    "actions": [
+      {
+        "action": "REQUESTED_NOT_AVAILABLE"
+      }
+    ],
+    "requires_more_evidence": true,
+    "policy_rule": "R1",
+    "policy_status": "VERIFIED",
+    "reason": "Available graph evidence provides contextual signals but is insufficient to establish safety or confirm fraud without verified policy rules.",
+    "route": "auto",
+    "status": "REQUESTED_NOT_AVAILABLE"
+  },
+  "policy_decision": {
+    "policy_status": "VERIFIED",
+    "policy_rule": "R1",
+    "approval_route": "auto",
+    "explanation": "Available graph evidence provides contextual signals but is insufficient to establish safety or confirm fraud without verified policy rules."
+  },
+  "case_memory_written": true,
+  "case_memory_write_status": "VERIFIED",
+  "mapping_method": "DEMO_MAPPING",
+  "mapping_confidence": 0
+}

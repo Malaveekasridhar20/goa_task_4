@@ -1,0 +1,23 @@
+CREATE QUERY get_transaction_context(STRING txn_id) FOR GRAPH FraudGraph {
+  Start = {Transaction.*};
+  Txn = SELECT t FROM Start:t WHERE t.txn_id == txn_id;
+  
+  PRINT Txn;
+  
+  CardInfo = SELECT c FROM Txn:t -(MADE)- Card:c;
+  PRINT CardInfo;
+  
+  DeviceInfo = SELECT d FROM Txn:t -(FROM_DEVICE)- DeviceProfile:d;
+  PRINT DeviceInfo;
+}
+
+CREATE QUERY find_connected_entities(STRING device_id) FOR GRAPH FraudGraph {
+  Start = {DeviceProfile.*};
+  Device = SELECT d FROM Start:d WHERE d.device_id == device_id;
+  
+  Txns = SELECT t FROM Device:d -(FROM_DEVICE)- Transaction:t;
+  Cards = SELECT c FROM Txns:t -(MADE)- Card:c;
+  
+  PRINT Txns;
+  PRINT Cards;
+}

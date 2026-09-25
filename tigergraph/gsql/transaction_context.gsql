@@ -1,0 +1,21 @@
+// GSQL Query: get_transaction_context
+// Retrieves 1-hop and 2-hop neighborhood around a transaction for evidence gathering.
+
+CREATE QUERY get_transaction_context(STRING txn_id) FOR GRAPH FraudGraph SYNTAX V2 {
+  SetAccum<STRING> @@evidence_claims;
+  
+  Start = {Transaction.*};
+  
+  // Find the initial transaction
+  Txn = SELECT t FROM Start:t WHERE t.txn_id == txn_id;
+  
+  // 1-hop: Find card, device, email, region
+  Connected = SELECT tgt FROM Txn:s -(_)-> :tgt;
+  
+  // 2-hop: Find other transactions on same device or card
+  Hop2 = SELECT tgt FROM Connected:s -(_)-> Transaction:tgt WHERE tgt.txn_id != txn_id;
+  
+  PRINT Txn;
+  PRINT Connected;
+  PRINT Hop2;
+}

@@ -1,0 +1,55 @@
+{
+  "case_id": "HHG-009",
+  "flagged_txn_id": 3581141,
+  "execution_mode": "BLOCKED_DATASET_MISMATCH",
+  "investigation_status": "BLOCKED",
+  "is_official_benchmark": true,
+  "graph_evidence": [
+    {
+      "evidence_id": "EV-BLOCKED",
+      "source": "TigerGraph_MCP",
+      "query": "get_transaction_context",
+      "traversal": "Payment_Transaction",
+      "entities": [
+        3581141
+      ],
+      "attributes": {},
+      "finding": "Transaction not found",
+      "evidence_strength": "UNAVAILABLE"
+    }
+  ],
+  "graphrag_evidence": [],
+  "uncertainty": {
+    "level": "HIGH",
+    "reason": "The benchmark transaction ID is not present in the connected TigerGraph dataset, so transaction-level fraud evidence cannot be assessed."
+  },
+  "pattern_assessment": [],
+  "evidence_request": null,
+  "additional_evidence": [],
+  "initial_nba": {
+    "status": "BLOCKED",
+    "actions": [],
+    "requires_more_evidence": false,
+    "policy_rule": null,
+    "policy_status": "UNVERIFIED",
+    "reason": "Investigation blocked due to dataset mismatch or unavailable data.",
+    "route": "auto"
+  },
+  "final_nba": {
+    "status": "BLOCKED",
+    "actions": [],
+    "requires_more_evidence": false,
+    "policy_rule": null,
+    "policy_status": "UNVERIFIED",
+    "reason": "Investigation blocked due to dataset mismatch or unavailable data.",
+    "route": "auto"
+  },
+  "policy_decision": {
+    "policy_status": "UNVERIFIED",
+    "policy_rule": null,
+    "approval_route": "auto",
+    "explanation": "No policy applied because transaction was not found in the live graph."
+  },
+  "case_memory_written": false,
+  "case_memory_write_status": "SKIPPED_DUE_TO_MISSING_DATA"
+}
