@@ -11,18 +11,18 @@ An autonomous AI Agent that receives fraud alerts, queries a TigerGraph database
 ### Investigation Flow
 ```mermaid
 graph TD
-    A[Fraud Signal / Alert] --> B[Investigation Agent]
-    B --> C[TigerGraph MCP / REST Fallback]
-    C --> D[Graph Traversals: Txn / Card / Device / History]
-    D --> E[Graph Evidence Extraction]
-    E --> F[Pattern Assessment]
-    E --> G[GraphRAG (Historical Cases)]
-    F --> H[Uncertainty Assessment]
-    F --> I[Evidence-Weighted Fraud Probability]
-    I --> J[NBA Policy Engine]
-    J --> K[Approval Routing & Action]
-    J --> L[SAR Logic (Suspicious Activity Report)]
-    K --> M[TigerGraph Case Write-Back (O_ClosedCase)]
+    A["Fraud Signal / Alert"] --> B["Investigation Agent"]
+    B --> C["TigerGraph MCP / REST Fallback"]
+    C --> D["Graph Traversals: Txn / Card / Device / History"]
+    D --> E["Graph Evidence Extraction"]
+    E --> F["Pattern Assessment"]
+    E --> G["GraphRAG (Historical Cases)"]
+    F --> H["Uncertainty Assessment"]
+    F --> I["Evidence-Weighted Fraud Probability"]
+    I --> J["NBA Policy Engine"]
+    J --> K["Approval Routing & Action"]
+    J --> L["SAR Logic (Suspicious Activity Report)"]
+    K --> M["TigerGraph Case Write-Back (O_ClosedCase)"]
     L --> M
 ```
 
