@@ -66,7 +66,20 @@ def load_data():
         
         tx_cols = ['TransactionID', 'ts', 'TransactionAmt', 'ProductCD', 'channel', 'risk_score']
         transactions = df_tx[tx_cols].dropna(subset=['TransactionID'])
-        conn.upsertVertexDataFrame(df=transactions, vertexType='Transaction', v_id='TransactionID', attributes={'ts': 'ts', 'amount': 'TransactionAmt', 'product_cd': 'ProductCD', 'channel': 'channel', 'risk_score': 'risk_score'})
+        
+        # FIX: The official schema uses O_Transaction, and expects TransactionAmt (not amount)
+        conn.upsertVertexDataFrame(
+            df=transactions, 
+            vertexType='O_Transaction', 
+            v_id='TransactionID', 
+            attributes={
+                'ts': 'ts', 
+                'TransactionAmt': 'TransactionAmt', 
+                'ProductCD': 'ProductCD', 
+                'channel': 'channel', 
+                'risk_score': 'risk_score'
+            }
+        )
         
         print("Transactions loaded successfully.")
     except Exception as e:

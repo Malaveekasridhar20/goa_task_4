@@ -69,7 +69,7 @@ class GraphInvestigationTools:
         # 1. Get Transaction
         status, txn_res = self.mcp_caller("tigergraph__get_node", {
             "vertex_type": self.v("Payment_Transaction"),
-            "vertex_id": txn_id
+            "vertex_id": str(txn_id)
         })
         if status != "SUCCESS":
             return self._add_evidence("get_transaction_context", self.v("Payment_Transaction"), [txn_id], {}, "Transaction not found", "UNAVAILABLE")
@@ -84,7 +84,7 @@ class GraphInvestigationTools:
         # 2. Get Card linked to Transaction
         status, edge_res = self.mcp_caller("tigergraph__get_node_edges", {
             "vertex_type": self.v("Payment_Transaction"),
-            "vertex_id": txn_id
+            "vertex_id": str(txn_id)
         })
         
         print(f"DEBUG get_node_edges status: {status}, res: {edge_res[:200]}...")
@@ -126,22 +126,41 @@ class GraphInvestigationTools:
         # 4. Get related transactions from Card
         status, rel_txn_res = self.mcp_caller("tigergraph__get_node_edges", {
             "vertex_type": self.v("Card"),
-            "vertex_id": str(card_id),
-            "edge_type": self.e("Card_Send_Transaction")
+            "vertex_id": str(card_id)
         })
         try:
             rel_txns = json.loads(self._clean_json(rel_txn_res)).get("data", {}).get("edges", [])
         except:
             rel_txns = []
             
-        rel_txn_ids = [e.get("to_id") for e in rel_txns if e.get("to_id") != txn_id][:self.max_related]
+        rel_txn_ids = [e.get("to_id") for e in rel_txns if e.get("to_type") == self.v("Payment_Transaction") and e.get("to_id") != txn_id]
+        if not rel_txn_ids:
+            rel_txn_ids = [e.get("from_id") for e in rel_txns if e.get("from_type") == self.v("Payment_Transaction") and e.get("from_id") != txn_id]
         
-        finding = f"Transaction {txn_id} was made by Card {card_id}, which has {len(rel_txns)} total transactions. Sampled related: {rel_txn_ids}"
+        # 4.5 Fallback to CSV for precise history and current txn details (due to missing graph mapping)
+        import pandas as pd
+        try:
+            df = pd.read_csv("C:/Users/malav/Downloads/transactions.csv")
+            curr_txn = df[df["TransactionID"] == int(txn_id)]
+            if not curr_txn.empty:
+                txn_attrs["TransactionAmt"] = float(curr_txn["TransactionAmt"].values[0])
+                txn_attrs["TransactionDT"] = str(curr_txn["TransactionDT"].values[0])
+                txn_attrs["ProductCD"] = str(curr_txn["ProductCD"].values[0])
+            
+            rel_df = df[df["TransactionID"].isin([int(x) for x in rel_txn_ids])].sort_values("TransactionDT")
+            history = [{"id": str(r["TransactionID"]), "amt": float(r["TransactionAmt"]), "ts": str(r["TransactionDT"]), "channel": str(r["ProductCD"])} for _, r in rel_df.iterrows()]
+        except Exception as e:
+            history = []
+            print(f"DEBUG CSV Error: {e}")
+
+        rel_txn_ids = rel_txn_ids[:self.max_related]
+        
+        finding = f"Transaction {txn_id} (Amt: {txn_attrs.get('TransactionAmt', 0)}, TS: {txn_attrs.get('TransactionDT', '')}, Channel: {txn_attrs.get('ProductCD', '')}) was made by Card {card_id}, which has {len(rel_txns)} total transactions. History: {history}"
         return self._add_evidence(
             "get_transaction_context",
             "Payment_Transaction -> Card -> Payment_Transaction",
             [txn_id, card_id] + rel_txn_ids,
-            {"txn_amount": txn_attrs.get("amount"), "card_pagerank": card_data.get("attributes", {}).get("pagerank")},
+            {"txn_amount": txn_attrs.get("TransactionAmt", 0), "card_pagerank": card_data.get("attributes", {}).get("pagerank")},
             finding,
             "DIRECT" if len(rel_txns) > 0 else "INDIRECT"
         )
@@ -150,7 +169,7 @@ class GraphInvestigationTools:
         """B. Transaction -> Merchant -> Merchant Category"""
         status, edge_res = self.mcp_caller("tigergraph__get_node_edges", {
             "vertex_type": self.v("Payment_Transaction"),
-            "vertex_id": txn_id
+            "vertex_id": str(txn_id)
         })
         try:
             edges = json.loads(self._clean_json(edge_res)).get("data", {}).get("edges", [])
@@ -167,15 +186,14 @@ class GraphInvestigationTools:
             
         status, m_edges_res = self.mcp_caller("tigergraph__get_node_edges", {
             "vertex_type": self.v("Merchant"),
-            "vertex_id": merchant_id,
-            "edge_type": self.e("Merchant_Assigned")
+            "vertex_id": merchant_id
         })
         try:
             m_edges = json.loads(self._clean_json(m_edges_res)).get("data", {}).get("edges", [])
         except:
             m_edges = []
             
-        categories = [e.get("to_id") for e in m_edges if e.get("to_type") == "Merchant_Category"]
+        categories = [e.get("to_id") for e in m_edges if "Category" in e.get("to_type", "")]
         
         return self._add_evidence(
             "get_merchant_context",
@@ -299,7 +317,7 @@ class GraphInvestigationTools:
         if self.evaluation_mode == "OFFICIAL_BENCHMARK":
             status, txn_edges_res = self.mcp_caller("tigergraph__get_node_edges", {
                 "vertex_type": self.v("Payment_Transaction"),
-                "vertex_id": txn_id
+                "vertex_id": str(txn_id)
             })
             try:
                 txn_edges = json.loads(self._clean_json(txn_edges_res)).get("data", {}).get("edges", [])
@@ -334,7 +352,7 @@ class GraphInvestigationTools:
         if self.evaluation_mode == "OFFICIAL_BENCHMARK":
             status, edges_res = self.mcp_caller("tigergraph__get_node_edges", {
                 "vertex_type": self.v("Payment_Transaction"),
-                "vertex_id": txn_id
+                "vertex_id": str(txn_id)
             })
             try:
                 edges = json.loads(self._clean_json(edges_res)).get("data", {}).get("edges", [])
