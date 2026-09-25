@@ -1,80 +1,103 @@
 {
   "case_id": "HHG-019",
-  "execution_mode": "BLOCKED",
+  "execution_mode": "REAL",
   "investigation_status": "COMPLETED",
   "case": {
-    "status": "closed_legitimate",
-    "verdict": "legitimate",
-    "fraud_probability": 0.05,
-    "pattern": "Unknown",
-    "pattern_description": "No documented fraud pattern could be verified from the available graph and dataset evidence; the agent requested additional customer validation.",
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.8,
+    "pattern": "CNP",
+    "pattern_description": "Detected CNP via graph connections.",
     "affected_txn_ids": [
       "3503878"
     ],
     "first_suspicious_txn_id": "3503878",
-    "connected_card_ids": [],
-    "connected_device_profiles": [],
+    "connected_card_ids": [
+      "11539"
+    ],
+    "connected_device_profiles": [
+      "desktop_Windows"
+    ],
     "exposure_usd": 99.92,
     "evidence": [
-      "EV-FE57C5D4",
-      "EV-C24E3331",
-      "EV-D9C361F6",
-      "EV-99BF34A5"
+      "EV-DB5EEEF9",
+      "EV-7D8DD0BC",
+      "EV-20D96714",
+      "EV-611C442E",
+      "EV-16BF1388"
     ],
     "similar_prior_cases": [
       "CC-0137",
       "CC-0290",
-      "CC-0370"
+      "CC-0370",
+      "CC-5400",
+      "CC-5381",
+      "CC-5253",
+      "CC-5216",
+      "CC-5153"
     ],
-    "summary": "Case investigated. Initial probability 0.50. Final probability 0.05. Final assessment after simulated customer confirmation: no documented fraud pattern was established from available evidence, so the case was closed as legitimate under the applicable policy.",
-    "written_to_graph": false,
-    "graph_write_status": "BLOCKED",
-    "graph_case_id": null
+    "summary": "Case investigated. Initial probability 0.80. Final probability 0.80. Final action: Blocking limit under threshold, requires L1",
+    "written_to_graph": true,
+    "graph_write_status": "VERIFIED",
+    "graph_case_id": "HHG-019"
   },
   "graph_evidence": [
     {
-      "evidence_id": "EV-FE57C5D4",
+      "evidence_id": "EV-DB5EEEF9",
       "source": "TigerGraph_MCP",
       "query": "get_transaction_context",
-      "traversal": "O_Transaction -> O_Card",
+      "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
       "entities": [
-        3503878
+        3503878,
+        "11539",
+        "3108054",
+        "3183853",
+        "3207217",
+        "3428952",
+        "3446832",
+        "3457587",
+        "3101852",
+        "3103012",
+        "3104707",
+        "3254724"
       ],
       "attributes": {
-        "TransactionAmt": 99.92,
         "txn_amount": 99.92,
-        "TransactionDT": "13195733",
-        "ProductCD": "R"
+        "card_pagerank": null
       },
-      "finding": "No Card found for transaction",
-      "evidence_strength": "INDIRECT"
+      "finding": "Transaction 3503878 (Amt: 99.92, TS: 13195733, Channel: R) was made by Card 11539, which has 50 total transactions. History: [{'id': '3006178', 'amt': 209.94, 'ts': '179105', 'channel': 'W'}, {'id': '3007932', 'amt': 100.02, 'ts': '239401', 'channel': 'H'}, {'id': '3015182', 'amt': 526.95, 'ts': '414603', 'channel': 'W'}, {'id': '3101847', 'amt': 50.0, 'ts': '2054254', 'channel': 'H'}, {'id': '3101852', 'amt': 49.93, 'ts': '2054280', 'channel': 'H'}, {'id': '3103012', 'amt': 49.95, 'ts': '2064651', 'channel': 'H'}, {'id': '3103105', 'amt': 150.01, 'ts': '2065561', 'channel': 'R'}, {'id': '3103346', 'amt': 112.92, 'ts': '2068195', 'channel': 'W'}, {'id': '3104707', 'amt': 30.01, 'ts': '2084797', 'channel': 'S'}, {'id': '3108054', 'amt': 99.96, 'ts': '2147227', 'channel': 'R'}, {'id': '3113409', 'amt': 334.97, 'ts': '2235841', 'channel': 'W'}, {'id': '3130153', 'amt': 335.01, 'ts': '2589840', 'channel': 'W'}, {'id': '3133432', 'amt': 582.05, 'ts': '2675429', 'channel': 'W'}, {'id': '3135688', 'amt': 159.86, 'ts': '2746906', 'channel': 'W'}, {'id': '3154533', 'amt': 311.97, 'ts': '3203886', 'channel': 'W'}, {'id': '3171496', 'amt': 117.08, 'ts': '3703985', 'channel': 'W'}, {'id': '3183853', 'amt': 59.09, 'ts': '4060509', 'channel': 'W'}, {'id': '3184968', 'amt': 487.94, 'ts': '4114510', 'channel': 'W'}, {'id': '3207217', 'amt': 58.92, 'ts': '4758656', 'channel': 'W'}, {'id': '3207238', 'amt': 59.02, 'ts': '4758985', 'channel': 'W'}, {'id': '3222220', 'amt': 149.92, 'ts': '5236481', 'channel': 'H'}, {'id': '3254724', 'amt': 312.01, 'ts': '6107748', 'channel': 'W'}, {'id': '3275275', 'amt': 445.09, 'ts': '6707039', 'channel': 'W'}, {'id': '3279839', 'amt': 117.0, 'ts': '6821643', 'channel': 'W'}, {'id': '3292758', 'amt': 116.99, 'ts': '7232346', 'channel': 'W'}, {'id': '3302750', 'amt': 34.09, 'ts': '7509484', 'channel': 'W'}, {'id': '3309389', 'amt': 31.02, 'ts': '7687152', 'channel': 'W'}, {'id': '3330129', 'amt': 171.01, 'ts': '8133925', 'channel': 'W'}, {'id': '3330361', 'amt': 196.97, 'ts': '8141634', 'channel': 'W'}, {'id': '3340979', 'amt': 444.93, 'ts': '8389152', 'channel': 'W'}, {'id': '3342493', 'amt': 36.89, 'ts': '8448121', 'channel': 'W'}, {'id': '3343102', 'amt': 445.0, 'ts': '8457601', 'channel': 'W'}, {'id': '3346219', 'amt': 117.01, 'ts': '8541502', 'channel': 'W'}, {'id': '3365626', 'amt': 140.99, 'ts': '9073672', 'channel': 'W'}, {'id': '3370737', 'amt': 34.08, 'ts': '9233277', 'channel': 'W'}, {'id': '3376146', 'amt': 103.93, 'ts': '9396857', 'channel': 'W'}, {'id': '3376171', 'amt': 102.94, 'ts': '9397303', 'channel': 'W'}, {'id': '3410072', 'amt': 57.98, 'ts': '10356206', 'channel': 'W'}, {'id': '3428952', 'amt': 145.99, 'ts': '10851716', 'channel': 'W'}, {'id': '3446832', 'amt': 884.01, 'ts': '11380904', 'channel': 'W'}, {'id': '3454839', 'amt': 226.03, 'ts': '11642822', 'channel': 'W'}, {'id': '3457587', 'amt': 226.09, 'ts': '11730705', 'channel': 'W'}, {'id': '3512695', 'amt': 35.95, 'ts': '13438555', 'channel': 'W'}, {'id': '3521616', 'amt': 100.05, 'ts': '13694210', 'channel': 'H'}, {'id': '3537523', 'amt': 59.07, 'ts': '14161501', 'channel': 'W'}, {'id': '3564124', 'amt': 35.94, 'ts': '14943162', 'channel': 'W'}, {'id': '3568651', 'amt': 723.96, 'ts': '15090967', 'channel': 'W'}, {'id': '3590562', 'amt': 33.92, 'ts': '15807346', 'channel': 'W'}]",
+      "evidence_strength": "DIRECT"
     },
     {
-      "evidence_id": "EV-C24E3331",
+      "evidence_id": "EV-7D8DD0BC",
       "source": "TigerGraph_MCP",
       "query": "get_merchant_context",
-      "traversal": "O_Transaction -> O_BillingRegion",
+      "traversal": "Payment_Transaction -> Merchant -> Merchant_Category",
       "entities": [
-        3503878
+        3503878,
+        "264.0_87.0"
       ],
       "attributes": {},
-      "finding": "No Merchant found",
-      "evidence_strength": "UNAVAILABLE"
+      "finding": "Transaction at Merchant 264.0_87.0, Categories: []",
+      "evidence_strength": "DIRECT"
     },
     {
-      "evidence_id": "EV-D9C361F6",
+      "evidence_id": "EV-20D96714",
       "source": "TigerGraph_MCP",
       "query": "get_party_device_ip_context",
-      "traversal": "Transaction->O_Card->O_Customer",
+      "traversal": "Transaction -> Card -> Party -> Device/IP",
       "entities": [
-        3503878
+        3503878,
+        "11539",
+        "11539",
+        "desktop_Windows"
       ],
       "attributes": {},
-      "finding": "Cannot traverse, no Card found.",
-      "evidence_strength": "UNAVAILABLE"
+      "finding": "Party 11539 has Devices: ['desktop_Windows'], IPs: []",
+      "evidence_strength": "DIRECT"
     },
     {
-      "evidence_id": "EV-99BF34A5",
+      "evidence_id": "EV-611C442E",
       "source": "TigerGraph_GraphAlgorithm",
       "query": "Card Transaction Velocity (Local Neighborhood Sub-graph Aggregation)",
       "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
@@ -84,6 +107,19 @@
       "attributes": {},
       "finding": "Graph algorithm execution failed or data is unavailable.",
       "evidence_strength": "UNAVAILABLE"
+    },
+    {
+      "evidence_id": "EV-16BF1388",
+      "source": "TigerGraph_MCP",
+      "query": "get_closed_case_context",
+      "traversal": "O_Transaction <- O_INVOLVED_IN - O_ClosedCase",
+      "entities": [
+        3503878,
+        "HHG-019"
+      ],
+      "attributes": {},
+      "finding": "Transaction 3503878 is linked to historical closed cases: ['HHG-019']",
+      "evidence_strength": "DIRECT"
     }
   ],
   "graphrag_evidence": [
@@ -116,27 +152,57 @@
     {
       "source": "historical_case",
       "value": "CC-0370"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-5400"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-5381"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-5253"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-5216"
+    },
+    {
+      "source": "historical_case",
+      "value": "CC-5153"
     }
   ],
-  "uncertainty_level": "LOW",
+  "uncertainty_level": "MEDIUM",
   "pattern_assessment": [
     {
       "pattern": "Card testing",
       "status": "UNAVAILABLE",
       "evidence": [],
-      "reason": "No card or related transaction evidence available."
+      "reason": "No small authorization sequence detected."
     },
     {
       "pattern": "CNP",
-      "status": "UNAVAILABLE",
-      "evidence": [],
-      "reason": "No merchant evidence available."
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-DB5EEEF9"
+      ],
+      "reason": "Online transaction detected but missing strong unusual amount or independent historical support.",
+      "criteria": {
+        "online": true,
+        "unusual_amount": false,
+        "historical_support": false
+      },
+      "independent_historical_cases": []
     },
     {
       "pattern": "CNP from new device",
-      "status": "UNAVAILABLE",
-      "evidence": [],
-      "reason": "No device or party context available."
+      "status": "PARTIAL",
+      "evidence": [
+        "EV-20D96714"
+      ],
+      "reason": "Device context established (Device: True, IP: False)."
     },
     {
       "pattern": "Out-of-region",
@@ -151,51 +217,58 @@
       "reason": "Missing transaction-level signals for ATO."
     }
   ],
-  "evidence_requests": [
-    {
-      "type": "customer_validation",
-      "asked_after_step": "initial_investigation",
-      "assumed_response": "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Customer confirmed the transaction as legitimate.",
-      "reason": "SIMULATION: Benchmark does not provide live customer. This response is deterministically assumed based on graph evidence patterns.",
-      "is_simulation": true
-    }
-  ],
+  "evidence_requests": [],
   "next_best_actions": {
     "initial": [
       {
-        "action": "ESCALATE_TO_ANALYST",
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Blocking limit under threshold, requires L1"
+      },
+      {
+        "action": "CREATE_CASE",
         "route": "auto",
-        "reason": "Uncertain and exhausted verification"
+        "reason": "Required when blocking"
       }
     ],
     "final": [
       {
-        "action": "CLOSE_NO_FRAUD",
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Blocking limit under threshold, requires L1"
+      },
+      {
+        "action": "CREATE_CASE",
         "route": "auto",
-        "reason": "Deemed legitimate based on available evidence and simulated response."
+        "reason": "Required when blocking"
       }
     ],
-    "what_changed": "Reassessed based on simulated customer response."
+    "what_changed": "No change."
   },
   "final_nba": {
     "actions": [
       {
-        "action": "CLOSE_NO_FRAUD",
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Blocking limit under threshold, requires L1"
+      },
+      {
+        "action": "CREATE_CASE",
         "route": "auto",
-        "reason": "Deemed legitimate based on available evidence and simulated response."
+        "reason": "Required when blocking"
       }
     ],
     "requires_more_evidence": false,
     "policy_rule": null,
     "policy_status": "UNVERIFIED",
-    "reason": "Deemed legitimate based on available evidence and simulated response.",
-    "route": "auto"
+    "reason": "Blocking limit under threshold, requires L1",
+    "route": "L1"
   },
   "policy_results": {
     "policy_status": "UNVERIFIED",
     "policy_rule": null,
-    "approval_route": "auto",
-    "explanation": "Deemed legitimate based on available evidence and simulated response."
+    "approval_route": "L1",
+    "explanation": "Blocking limit under threshold, requires L1"
   },
   "sar": {
     "file": false,
@@ -205,7 +278,7 @@
     "total_amount_usd": 0.0,
     "activity_dates": []
   },
-  "stop_reason": "Deemed legitimate based on available evidence and simulated response.",
+  "stop_reason": "Blocking limit under threshold, requires L1",
   "tool_calls": [
     {
       "tool": "TigerGraph_MCP",
@@ -216,5 +289,19 @@
     "prompt": 0,
     "completion": 0
   },
-  "latency_s": 7.354172945022583
+  "probability_signals": [
+    {
+      "signal": "CNP (Partial)",
+      "value": true,
+      "weight": 0.15,
+      "reason": "Online transaction detected but missing strong unusual amount or independent historical support."
+    },
+    {
+      "signal": "CNP from new device (Partial)",
+      "value": true,
+      "weight": 0.15,
+      "reason": "Device context established (Device: True, IP: False)."
+    }
+  ],
+  "latency_s": 22.393396854400635
 }

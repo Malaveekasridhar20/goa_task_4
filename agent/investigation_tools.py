@@ -8,6 +8,7 @@ class GraphInvestigationTools:
         self.max_related = max_related
         self.evaluation_mode = evaluation_mode
         self.evidence_ledger = []
+        self._mcp_cache = {}
         
     def v(self, type_name):
         if self.evaluation_mode == "OFFICIAL_BENCHMARK":
@@ -51,6 +52,11 @@ class GraphInvestigationTools:
         return text.strip()
 
     def _call_mcp_with_fallback(self, tool_name, args):
+        import json
+        cache_key = f"{tool_name}_{json.dumps(args, sort_keys=True)}"
+        if cache_key in self._mcp_cache:
+            return self._mcp_cache[cache_key]
+
         status, res = "BLOCKED", ""
         needs_fallback = False
         
@@ -73,31 +79,36 @@ class GraphInvestigationTools:
                     except:
                         needs_fallback = True
 
-            if needs_fallback and self.evaluation_mode == "OFFICIAL_BENCHMARK":
-                import os, requests, json
-                host = os.getenv("TG_HOST", "").rstrip("/")
-                secret = os.getenv("TG_SECRET", "")
-                if host and secret:
-                    try:
-                        jwt = requests.post(f"{host}/gsql/v1/tokens", json={"secret": secret}, timeout=10).json().get("token")
-                        h = {"Authorization": f"Bearer {jwt}"}
-                        v_type = args.get("vertex_type")
-                        v_id = args.get("vertex_id")
-                        if tool_name == "tigergraph__get_node":
-                            r = requests.get(f"{host}/restpp/graph/HHGOA_Fraud_Official/vertices/{v_type}/{v_id}", headers=h, timeout=10)
-                            if r.status_code == 200 and not r.json().get("error"):
-                                results = r.json().get("results", [])
-                                if results:
-                                    mcp_res = {"data": {"attributes": results[0].get("attributes", {})}}
-                                    return "SUCCESS", "```json\n" + json.dumps(mcp_res) + "\n```"
-                        elif tool_name == "tigergraph__get_node_edges":
-                            r = requests.get(f"{host}/restpp/graph/HHGOA_Fraud_Official/edges/{v_type}/{v_id}?limit=50", headers=h, timeout=10)
-                            if r.status_code == 200 and not r.json().get("error"):
-                                results = r.json().get("results", [])
-                                mcp_res = {"data": {"edges": results}}
-                                return "SUCCESS", "```json\n" + json.dumps(mcp_res) + "\n```"
-                    except Exception:
-                        pass
+        if needs_fallback and self.evaluation_mode == "OFFICIAL_BENCHMARK":
+            import os, requests, json
+            host = os.getenv("TG_HOST", "").rstrip("/")
+            secret = os.getenv("TG_SECRET", "")
+            if host and secret:
+                import urllib3
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                try:
+                    jwt = requests.post(f"{host}/gsql/v1/tokens", json={"secret": secret}, timeout=10, verify=False).json().get("token")
+                    h = {"Authorization": f"Bearer {jwt}"}
+                    v_type = args.get("vertex_type")
+                    v_id = args.get("vertex_id")
+                    if tool_name == "tigergraph__get_node":
+                        r = requests.get(f"{host}/restpp/graph/HHGOA_Fraud_Official/vertices/{v_type}/{v_id}", headers=h, timeout=10, verify=False)
+                        if r.status_code == 200 and not r.json().get("error"):
+                            results = r.json().get("results", [])
+                            if results:
+                                mcp_res = {"data": {"attributes": results[0].get("attributes", {})}}
+                                self._mcp_cache[cache_key] = ("SUCCESS", "```json\n" + json.dumps(mcp_res) + "\n```")
+                                return self._mcp_cache[cache_key]
+                    elif tool_name == "tigergraph__get_node_edges":
+                        r = requests.get(f"{host}/restpp/graph/HHGOA_Fraud_Official/edges/{v_type}/{v_id}?limit=50", headers=h, timeout=10, verify=False)
+                        if r.status_code == 200 and not r.json().get("error"):
+                            results = r.json().get("results", [])
+                            mcp_res = {"data": {"edges": results}}
+                            self._mcp_cache[cache_key] = ("SUCCESS", "```json\n" + json.dumps(mcp_res) + "\n```")
+                            return self._mcp_cache[cache_key]
+                except Exception as e:
+                    pass
+        self._mcp_cache[cache_key] = (status, res)
         return status, res
 
 

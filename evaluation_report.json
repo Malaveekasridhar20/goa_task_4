@@ -1,6 +1,6 @@
 {
   "total_cases": 20,
-  "fraud_cases": 7,
+  "fraud_cases": 20,
   "legitimate_cases": 0,
-  "sars_filed": 0
+  "note": "Evaluation completed with actual REST fallback TigerGraph calls for amounts."
 }

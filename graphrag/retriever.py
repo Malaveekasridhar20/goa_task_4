@@ -7,12 +7,14 @@ class GraphRAGRetriever:
         self.history_df = None
         
     def load_history(self):
-        if not self.history_df:
+        global _HISTORY_DF_CACHE
+        if '_HISTORY_DF_CACHE' not in globals():
             try:
-                self.history_df = pd.read_csv(self.cases_csv_path)
+                _HISTORY_DF_CACHE = pd.read_csv(self.cases_csv_path)
             except Exception as e:
                 print(f"GraphRAG Error: {e}")
-                self.history_df = pd.DataFrame()
+                _HISTORY_DF_CACHE = pd.DataFrame()
+        self.history_df = _HISTORY_DF_CACHE
                 
     def load_policy(self):
         policy_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs", "POLICY_MAPPING.md")
