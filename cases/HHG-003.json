@@ -1,7 +1,7 @@
 {
   "case_id": "HHG-003",
-  "execution_mode": "REAL",
-  "investigation_status": "closed_legitimate",
+  "execution_mode": "BLOCKED",
+  "investigation_status": "COMPLETED",
   "case": {
     "status": "closed_legitimate",
     "verdict": "legitimate",
@@ -12,82 +12,69 @@
       "3530164"
     ],
     "first_suspicious_txn_id": "3530164",
-    "connected_card_ids": [
-      "19739"
-    ],
+    "connected_card_ids": [],
     "connected_device_profiles": [],
     "exposure_usd": 49.0,
     "evidence": [
-      "EV-CCB8F8FF",
-      "EV-CFA2D72E",
-      "EV-4B236BC8",
-      "EV-182483A9"
+      "EV-64A822F6",
+      "EV-0CD08A06",
+      "EV-DBD6EA04",
+      "EV-9932862A"
     ],
     "similar_prior_cases": [
       "CC-0137",
       "CC-0290",
       "CC-0370"
     ],
-    "summary": "Case investigated. Initial probability 0.50. Final probability 0.05. Final action: Deemed legitimate under the final investigation evidence.",
-    "written_to_graph": true,
-    "graph_case_id": "HHG-003"
+    "summary": "Case investigated. Initial probability 0.50. Final probability 0.05. Final assessment after simulated customer confirmation: no documented fraud pattern was established from available evidence, so the case was closed as legitimate under the applicable policy.",
+    "written_to_graph": false,
+    "graph_write_status": "BLOCKED",
+    "graph_case_id": null
   },
   "graph_evidence": [
     {
-      "evidence_id": "EV-CCB8F8FF",
+      "evidence_id": "EV-64A822F6",
       "source": "TigerGraph_MCP",
       "query": "get_transaction_context",
-      "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
+      "traversal": "O_Transaction -> O_Card",
       "entities": [
-        3530164,
-        "19739",
-        "3021411",
-        "3028537",
-        "3062453",
-        "3104241",
-        "3112078",
-        "3131271",
-        "3172536",
-        "3197826",
-        "3206616",
-        "3206714"
+        3530164
       ],
       "attributes": {
+        "TransactionAmt": 49.0,
         "txn_amount": 49.0,
-        "card_pagerank": null
+        "TransactionDT": "13957281",
+        "ProductCD": "W"
       },
-      "finding": "Transaction 3530164 (Amt: 49.0, TS: 13957281, Channel: W) was made by Card 19739, which has 100 total transactions. History: [{'id': '3021411', 'amt': 102.07, 'ts': '570536', 'channel': 'W'}, {'id': '3024198', 'amt': 39.98, 'ts': '609363', 'channel': 'W'}, {'id': '3028537', 'amt': 269.92, 'ts': '705851', 'channel': 'W'}, {'id': '3030556', 'amt': 68.49, 'ts': '765487', 'channel': 'W'}, {'id': '3036488', 'amt': 29.06, 'ts': '894707', 'channel': 'W'}, {'id': '3036495', 'amt': 8.92, 'ts': '896403', 'channel': 'W'}, {'id': '3039755', 'amt': 399.0, 'ts': '955437', 'channel': 'W'}, {'id': '3043882', 'amt': 109.04, 'ts': '1041008', 'channel': 'W'}, {'id': '3049209', 'amt': 106.94, 'ts': '1175260', 'channel': 'W'}, {'id': '3062453', 'amt': 29.08, 'ts': '1433682', 'channel': 'W'}, {'id': '3065356', 'amt': 29.07, 'ts': '1465867', 'channel': 'W'}, {'id': '3067427', 'amt': 49.04, 'ts': '1522165', 'channel': 'W'}, {'id': '3086730', 'amt': 108.02, 'ts': '1817453', 'channel': 'W'}, {'id': '3090858', 'amt': 166.94, 'ts': '1887975', 'channel': 'W'}, {'id': '3102514', 'amt': 150.01, 'ts': '2060145', 'channel': 'R'}, {'id': '3104241', 'amt': 54.41, 'ts': '2078519', 'channel': 'W'}, {'id': '3112078', 'amt': 29.03, 'ts': '2222631', 'channel': 'W'}, {'id': '3119215', 'amt': 57.98, 'ts': '2338165', 'channel': 'W'}, {'id': '3131271', 'amt': 19.99, 'ts': '2638308', 'channel': 'S'}, {'id': '3136695', 'amt': 105.55, 'ts': '2760554', 'channel': 'W'}, {'id': '3137923', 'amt': 54.0, 'ts': '2793619', 'channel': 'W'}, {'id': '3149516', 'amt': 116.91, 'ts': '3093084', 'channel': 'W'}, {'id': '3159520', 'amt': 441.03, 'ts': '3354762', 'channel': 'W'}, {'id': '3168271', 'amt': 130.49, 'ts': '3611423', 'channel': 'W'}, {'id': '3172482', 'amt': 28.92, 'ts': '3721909', 'channel': 'W'}, {'id': '3172536', 'amt': 97.01, 'ts': '3723208', 'channel': 'W'}, {'id': '3173724', 'amt': 500.2, 'ts': '3779175', 'channel': 'W'}, {'id': '3174528', 'amt': 56.95, 'ts': '3792133', 'channel': 'W'}, {'id': '3175337', 'amt': 77.0, 'ts': '3807192', 'channel': 'W'}, {'id': '3182868', 'amt': 59.08, 'ts': '4044321', 'channel': 'W'}, {'id': '3183551', 'amt': 485.01, 'ts': '4055702', 'channel': 'W'}, {'id': '3185399', 'amt': 34.06, 'ts': '4123504', 'channel': 'W'}, {'id': '3190061', 'amt': 49.08, 'ts': '4240106', 'channel': 'W'}, {'id': '3197826', 'amt': 195.94, 'ts': '4481189', 'channel': 'W'}, {'id': '3200073', 'amt': 36.04, 'ts': '4556573', 'channel': 'W'}, {'id': '3204668', 'amt': 129.97, 'ts': '4679114', 'channel': 'W'}, {'id': '3206616', 'amt': 50.01, 'ts': '4747363', 'channel': 'H'}, {'id': '3206714', 'amt': 34.09, 'ts': '4749186', 'channel': 'W'}, {'id': '3207135', 'amt': 506.88, 'ts': '4756859', 'channel': 'W'}, {'id': '3208749', 'amt': 39.01, 'ts': '4822001', 'channel': 'W'}, {'id': '3211409', 'amt': 85.94, 'ts': '4905426', 'channel': 'W'}, {'id': '3211421', 'amt': 226.01, 'ts': '4905614', 'channel': 'W'}, {'id': '3211558', 'amt': 28.98, 'ts': '4907899', 'channel': 'W'}, {'id': '3216407', 'amt': 199.87, 'ts': '5059128', 'channel': 'W'}, {'id': '3216437', 'amt': 30.01, 'ts': '5059942', 'channel': 'W'}, {'id': '3221367', 'amt': 65.03, 'ts': '5187010', 'channel': 'W'}, {'id': '3222056', 'amt': 56.47, 'ts': '5228346', 'channel': 'W'}, {'id': '3256331', 'amt': 320.04, 'ts': '6133917', 'channel': 'W'}, {'id': '3256513', 'amt': 68.01, 'ts': '6137662', 'channel': 'W'}, {'id': '3257388', 'amt': 59.04, 'ts': '6185618', 'channel': 'W'}, {'id': '3258506', 'amt': 331.03, 'ts': '6207936', 'channel': 'W'}, {'id': '3271166', 'amt': 117.07, 'ts': '6567173', 'channel': 'W'}, {'id': '3278737', 'amt': 335.0, 'ts': '6803076', 'channel': 'W'}, {'id': '3280412', 'amt': 49.06, 'ts': '6832563', 'channel': 'W'}, {'id': '3281918', 'amt': 99.97, 'ts': '6893218', 'channel': 'R'}, {'id': '3327940', 'amt': 48.92, 'ts': '8103774', 'channel': 'W'}, {'id': '3335035', 'amt': 112.96, 'ts': '8269231', 'channel': 'W'}, {'id': '3339811', 'amt': 36.96, 'ts': '8371489', 'channel': 'W'}, {'id': '3345629', 'amt': 37.08, 'ts': '8532379', 'channel': 'S'}, {'id': '3360009', 'amt': 46.97, 'ts': '8910063', 'channel': 'W'}, {'id': '3361189', 'amt': 48.97, 'ts': '8962338', 'channel': 'W'}, {'id': '3362132', 'amt': 25.93, 'ts': '8979466', 'channel': 'W'}, {'id': '3362174', 'amt': 135.0, 'ts': '8980231', 'channel': 'W'}, {'id': '3368116', 'amt': 108.57, 'ts': '9152861', 'channel': 'W'}, {'id': '3380116', 'amt': 108.97, 'ts': '9499453', 'channel': 'W'}, {'id': '3390525', 'amt': 59.06, 'ts': '9819913', 'channel': 'W'}, {'id': '3399119', 'amt': 140.94, 'ts': '10066283', 'channel': 'W'}, {'id': '3399317', 'amt': 77.06, 'ts': '10073666', 'channel': 'W'}, {'id': '3407801', 'amt': 35.9, 'ts': '10290103', 'channel': 'W'}, {'id': '3415059', 'amt': 48.91, 'ts': '10500726', 'channel': 'W'}, {'id': '3419456', 'amt': 219.97, 'ts': '10606633', 'channel': 'W'}, {'id': '3449779', 'amt': 116.95, 'ts': '11472442', 'channel': 'W'}, {'id': '3454694', 'amt': 58.87, 'ts': '11639344', 'channel': 'W'}, {'id': '3454865', 'amt': 213.04, 'ts': '11643489', 'channel': 'W'}, {'id': '3471372', 'amt': 33.97, 'ts': '12169910', 'channel': 'W'}, {'id': '3472234', 'amt': 108.03, 'ts': '12186724', 'channel': 'W'}, {'id': '3481256', 'amt': 145.98, 'ts': '12504374', 'channel': 'W'}, {'id': '3488576', 'amt': 29.09, 'ts': '12746319', 'channel': 'W'}, {'id': '3495507', 'amt': 28.92, 'ts': '12947836', 'channel': 'W'}, {'id': '3498774', 'amt': 175.43, 'ts': '13042976', 'channel': 'W'}, {'id': '3499657', 'amt': 305.88, 'ts': '13082176', 'channel': 'W'}, {'id': '3499956', 'amt': 48.92, 'ts': '13094635', 'channel': 'W'}, {'id': '3500375', 'amt': 59.07, 'ts': '13102195', 'channel': 'W'}, {'id': '3501732', 'amt': 49.06, 'ts': '13125394', 'channel': 'W'}, {'id': '3503107', 'amt': 117.04, 'ts': '13179886', 'channel': 'W'}, {'id': '3511806', 'amt': 111.91, 'ts': '13392523', 'channel': 'W'}, {'id': '3514370', 'amt': 58.95, 'ts': '13469923', 'channel': 'W'}, {'id': '3517715', 'amt': 2680.95, 'ts': '13564518', 'channel': 'W'}, {'id': '3528392', 'amt': 117.06, 'ts': '13894752', 'channel': 'W'}, {'id': '3533469', 'amt': 601.59, 'ts': '14053404', 'channel': 'W'}, {'id': '3534946', 'amt': 116.97, 'ts': '14080535', 'channel': 'W'}, {'id': '3535867', 'amt': 97.98, 'ts': '14127134', 'channel': 'W'}, {'id': '3536124', 'amt': 91.97, 'ts': '14134778', 'channel': 'W'}, {'id': '3538627', 'amt': 183.07, 'ts': '14204792', 'channel': 'W'}, {'id': '3539627', 'amt': 39.09, 'ts': '14234739', 'channel': 'W'}, {'id': '3555813', 'amt': 55.06, 'ts': '14690261', 'channel': 'W'}, {'id': '3562238', 'amt': 58.98, 'ts': '14913365', 'channel': 'W'}, {'id': '3567298', 'amt': 117.08, 'ts': '15030087', 'channel': 'W'}]",
-      "evidence_strength": "DIRECT"
+      "finding": "No Card found for transaction",
+      "evidence_strength": "INDIRECT"
     },
     {
-      "evidence_id": "EV-CFA2D72E",
+      "evidence_id": "EV-0CD08A06",
       "source": "TigerGraph_MCP",
       "query": "get_merchant_context",
-      "traversal": "Payment_Transaction -> Merchant -> Merchant_Category",
+      "traversal": "O_Transaction -> O_BillingRegion",
       "entities": [
-        3530164,
-        "330.0_87.0"
+        3530164
       ],
       "attributes": {},
-      "finding": "Transaction at Merchant 330.0_87.0, Categories: []",
-      "evidence_strength": "DIRECT"
+      "finding": "No Merchant found",
+      "evidence_strength": "UNAVAILABLE"
     },
     {
-      "evidence_id": "EV-4B236BC8",
+      "evidence_id": "EV-DBD6EA04",
       "source": "TigerGraph_MCP",
       "query": "get_party_device_ip_context",
-      "traversal": "Transaction -> Card -> Party -> Device/IP",
+      "traversal": "Transaction->O_Card->O_Customer",
       "entities": [
-        3530164,
-        "19739",
-        "19739"
+        3530164
       ],
       "attributes": {},
-      "finding": "Party 19739 has Devices: [], IPs: []",
-      "evidence_strength": "DIRECT"
+      "finding": "Cannot traverse, no Card found.",
+      "evidence_strength": "UNAVAILABLE"
     },
     {
-      "evidence_id": "EV-182483A9",
+      "evidence_id": "EV-9932862A",
       "source": "TigerGraph_GraphAlgorithm",
       "query": "Card Transaction Velocity (Local Neighborhood Sub-graph Aggregation)",
       "traversal": "Payment_Transaction -> Card -> Payment_Transaction",
@@ -137,7 +124,7 @@
       "pattern": "Card testing",
       "status": "UNAVAILABLE",
       "evidence": [],
-      "reason": "No small authorization sequence detected."
+      "reason": "No card or related transaction evidence available."
     },
     {
       "pattern": "CNP",
@@ -168,8 +155,8 @@
     {
       "type": "customer_validation",
       "asked_after_step": "initial_investigation",
-      "assumed_response": "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Customer confirmed the transaction.",
-      "reason": "SIMULATION: Benchmark does not provide live customer.",
+      "assumed_response": "SIMULATED CUSTOMER RESPONSE (for benchmark execution): Customer confirmed the transaction as legitimate.",
+      "reason": "SIMULATION: Benchmark does not provide live customer. This response is deterministically assumed based on graph evidence patterns.",
       "is_simulation": true
     }
   ],
@@ -185,7 +172,7 @@
       {
         "action": "CLOSE_NO_FRAUD",
         "route": "auto",
-        "reason": "Deemed legitimate under the final investigation evidence."
+        "reason": "Deemed legitimate based on available evidence and simulated response."
       }
     ],
     "what_changed": "Reassessed based on simulated customer response."
@@ -195,20 +182,20 @@
       {
         "action": "CLOSE_NO_FRAUD",
         "route": "auto",
-        "reason": "Deemed legitimate under the final investigation evidence."
+        "reason": "Deemed legitimate based on available evidence and simulated response."
       }
     ],
     "requires_more_evidence": false,
     "policy_rule": null,
-    "policy_status": "VERIFIED",
-    "reason": "Deemed legitimate under the final investigation evidence.",
+    "policy_status": "UNVERIFIED",
+    "reason": "Deemed legitimate based on available evidence and simulated response.",
     "route": "auto"
   },
   "policy_results": {
-    "policy_status": "VERIFIED",
+    "policy_status": "UNVERIFIED",
     "policy_rule": null,
     "approval_route": "auto",
-    "explanation": "Deemed legitimate under the final investigation evidence."
+    "explanation": "Deemed legitimate based on available evidence and simulated response."
   },
   "sar": {
     "file": false,
@@ -218,7 +205,7 @@
     "total_amount_usd": 0.0,
     "activity_dates": []
   },
-  "stop_reason": "Deemed legitimate under the final investigation evidence.",
+  "stop_reason": "Deemed legitimate based on available evidence and simulated response.",
   "tool_calls": [
     {
       "tool": "TigerGraph_MCP",
@@ -229,5 +216,5 @@
     "prompt": 0,
     "completion": 0
   },
-  "latency_s": 74.41314911842346
+  "latency_s": 8.200106382369995
 }
